@@ -34,10 +34,10 @@ gem 'active_flag'
 
 ### Migration
 
-Always set 0 as a default.
+Always set `0` as a default.
 
 ```ruby
-t.integer :languages, null: false, default: 0, limit: 8
+t.integer :languages,                    null: false, default: 0, limit: 8
 # OR
 add_column :users, :languages, :integer, null: false, default: 0, limit: 8
 ```
@@ -96,7 +96,7 @@ profile.languages.to_human  #=> ['English', 'Spanish']
 
 ## Forms
 
-Thanks to the translation support, forms just work as you would expect.
+Thanks to the translation support, forms just work as you would expect with the `pairs` convenience method.
 
 ```ruby
 # With FormBuilder
