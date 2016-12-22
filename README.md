@@ -1,4 +1,6 @@
-# ActiveFlag
+# ActiveFlag - Bit array for ActiveRecord
+
+[![Build Status](https://travis-ci.org/kenn/active_flag.svg)](https://travis-ci.org/kenn/active_flag)
 
 Store up to 64 multiple flags ([bit array](https://en.wikipedia.org/wiki/Bit_array)) in a single integer column with ActiveRecord.
 
