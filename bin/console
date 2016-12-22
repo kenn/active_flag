@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'active_flag'
+
+require_relative '../test/load_fixtures'
+
+require 'irb'
+IRB.start
