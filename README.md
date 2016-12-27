@@ -27,10 +27,10 @@ profile.languages.to_a                      #=> [:english, :spanish]
 profile.languages = [:spanish, :japanese]   # Direct assignment that works with forms
 
 # Class methods
-Profile.where_languages(:french)        #=> SELECT * FROM profiles WHERE languages & 8 > 0
-Profile.languages.maps                  #=> {:english=>1, :spanish=>2, :chinese=>4, :french=>8, :japanese=>16 }
-Profile.languages.set_all!(:chinese)    #=> UPDATE "profiles" SET languages = COALESCE(languages, 0) | 4
-Profile.languages.unset_all!(:chinese)  #=> UPDATE "profiles" SET languages = COALESCE(languages, 0) & ~4
+Profile.where_languages(:french, :spanish)  #=> SELECT * FROM profiles WHERE languages & 10 > 0
+Profile.languages.maps                      #=> {:english=>1, :spanish=>2, :chinese=>4, :french=>8, :japanese=>16 }
+Profile.languages.set_all!(:chinese)        #=> UPDATE "profiles" SET languages = COALESCE(languages, 0) | 4
+Profile.languages.unset_all!(:chinese)      #=> UPDATE "profiles" SET languages = COALESCE(languages, 0) & ~4
 ```
 
 ## Install
@@ -56,13 +56,13 @@ add_column :users, :languages, :integer, null: false, default: 0, limit: 8
 For a querying purpose, use `where_[column]` scope.
 
 ```ruby
-Profile.where_languages(:french)      #=> SELECT * FROM profiles WHERE languages & 8 > 0
+Profile.where_languages(:french)            #=> SELECT * FROM profiles WHERE languages = 8
 ```
 
 Also takes multiple values.
 
 ```ruby
-Profile.where_languages(:french, :spanish)
+Profile.where_languages(:french, :spanish)  #=> SELECT * FROM profiles WHERE languages & 10 > 0
 ```
 
 By default, it searches with `or` operation, so the query above returns profiles that have either French or Spanish.
