@@ -1,21 +1,12 @@
 module ActiveFlag
   class Definition
-    attr_accessor :keys, :maps, :options, :column
+    attr_reader :keys, :maps, :column
 
-    def initialize(column, keys, options, klass)
+    def initialize(column, keys, klass)
       @column = column
       @keys = keys.freeze
       @maps = Hash[keys.map.with_index{|key, i| [key, 2**i] }].freeze
-      @options = options
       @klass = klass
-    end
-
-    def get(instance, integer)
-      to_value(instance, integer)
-    end
-
-    def set(instance, arg)
-      instance.send :write_attribute, @column, to_i(arg)
     end
 
     def humans
@@ -34,24 +25,27 @@ module ActiveFlag
     # http://stackoverflow.com/a/12928899/157384
 
     def set_all!(key)
-      @klass.update_all("#{@column} = COALESCE(#{@column},0) | #{@maps[key]}")
+      @klass.update_all("#{@column} = COALESCE(#{@column}, 0) | #{@maps[key]}")
     end
 
     def unset_all!(key)
-      @klass.update_all("#{@column} = COALESCE(#{@column},0) & ~#{@maps[key]}")
+      @klass.update_all("#{@column} = COALESCE(#{@column}, 0) & ~#{@maps[key]}")
     end
 
     def to_i(arg)
-      return 0 if arg.blank?
       arg = [arg] unless arg.is_a?(Enumerable)
-      arg.map{|i| i && @maps[i.to_sym] || 0 }.sum
+      arg.map{|s| s && @maps[s.to_s.to_sym] || 0 }.sum
+    end
+
+    def to_value(instance, integer)
+      Value.new(to_array(integer)).with(instance, self)
+    end
+
+    def to_array(integer)
+      @maps.map{|key, mask| (integer & mask > 0) ? key : nil }.compact
     end
 
   private
-
-    def to_value(instance, integer)
-      Value.new(@maps.map{|key, mask| (integer & mask > 0) ? key : nil }.compact).with(instance, self)
-    end
 
     # Human-friendly print on class level
     def human(key, options={})

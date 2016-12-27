@@ -8,21 +8,21 @@ module ActiveFlag
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def flag(column, keys, options = {})
+    def flag(column, keys)
       class << self
         attr_reader :active_flags
       end
       @active_flags ||= {}
-      @active_flags[column] = Definition.new(column, keys, options, self)
+      @active_flags[column] = Definition.new(column, keys, self)
 
       # Getter
       define_method column do
-        self.class.active_flags[column].get(self, read_attribute(column))
+        self.class.active_flags[column].to_value(self, read_attribute(column))
       end
 
       # Setter
       define_method "#{column}=" do |arg|
-        self.class.active_flags[column].set(self, arg)
+        write_attribute column, self.class.active_flags[column].to_i(arg)
       end
 
       # Reference to definition
@@ -38,7 +38,11 @@ module ActiveFlag
         if options[:op] == :and
           where("#{column_name} & #{integer} = #{integer}")
         else
-          where("#{column_name} & #{integer} > 0")
+          if integer & (integer - 1) == 0 # Power of 2, single bit
+            where("#{column_name} = #{integer}")
+          else
+            where("#{column_name} & #{integer} > 0")
+          end
         end
       end
     end

@@ -2,7 +2,12 @@
 
 [![Build Status](https://travis-ci.org/kenn/active_flag.svg)](https://travis-ci.org/kenn/active_flag)
 
-Store up to 64 multiple flags ([bit array](https://en.wikipedia.org/wiki/Bit_array)) in a single integer column with ActiveRecord.
+Store up to 64 multiple flags ([bit array](https://en.wikipedia.org/wiki/Bit_array)) in a single integer column with ActiveRecord. From a UI standpoint, it can be used as a  multi-select checkbox storage.
+
+Perfect solution to store multiple boolean values such as preferences, notification settings, achievement status, profile options, etc. in a single column.
+
+* **Single column to group multiple values.** You don't need to have many separate columns. You don't even need a migration when you add a new flag item to the list.
+* **Fast bitwise operations.** `WHERE languages & 3 > 0` is faster than `WHERE (english = true) OR (spanish = true) OR ...`
 
 ## Usage
 
@@ -22,8 +27,10 @@ profile.languages.to_a                      #=> [:english, :spanish]
 profile.languages = [:spanish, :japanese]   # Direct assignment that works with forms
 
 # Class methods
-Profile.languages.maps                #=> {:english=>1, :spanish=>2, :chinese=>4, :french=>8, :japanese=>16 }
-Profile.where_languages(:french)      #=> SELECT * FROM profiles WHERE languages & 8 > 0
+Profile.where_languages(:french)        #=> SELECT * FROM profiles WHERE languages & 8 > 0
+Profile.languages.maps                  #=> {:english=>1, :spanish=>2, :chinese=>4, :french=>8, :japanese=>16 }
+Profile.languages.set_all!(:chinese)    #=> UPDATE "profiles" SET languages = COALESCE(languages, 0) | 4
+Profile.languages.unset_all!(:chinese)  #=> UPDATE "profiles" SET languages = COALESCE(languages, 0) & ~4
 ```
 
 ## Install
@@ -84,7 +91,7 @@ ja:
         japanese: 日本語
 ```
 
-and now `profile.languages.to_human` returns a translated string.
+and now `to_human` method returns a translated string.
 
 ```ruby
 I18n.locale = :ja

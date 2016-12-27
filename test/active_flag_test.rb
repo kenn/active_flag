@@ -2,8 +2,7 @@ require 'test_helper'
 
 class ActiveFlagTest < Minitest::Test
   def setup
-    @profile = Profile.new
-    @profile.languages.set(:english)
+    @profile = Profile.first
   end
 
   def test_predicate
@@ -19,10 +18,26 @@ class ActiveFlagTest < Minitest::Test
     refute @profile.languages.chinese?
   end
 
+  def test_set_and_unset!
+    @profile.languages.set!(:chinese)
+    assert Profile.first.languages.chinese?
+
+    @profile.languages.unset!(:chinese)
+    refute Profile.first.languages.chinese?
+  end
+
+  def test_direct_assign
+    @profile.languages = [:french, :japanese]
+    assert @profile.languages.french?
+    assert @profile.languages.japanese?
+  end
+
   def test_raw
     assert_equal @profile.languages.raw, 1
+
     @profile.languages.set(:spanish)
     assert_equal @profile.languages.raw, 3
+
     @profile.languages.set(:chinese)
     assert_equal @profile.languages.raw, 7
   end
@@ -35,5 +50,13 @@ class ActiveFlagTest < Minitest::Test
 
     I18n.locale = :en
     assert_equal ['English', 'Spanish'], @profile.languages.to_human
+  end
+
+  def test_set_all_and_unset_all
+    Profile.languages.set_all!(:chinese)
+    assert Profile.first.languages.chinese?
+
+    Profile.languages.unset_all!(:chinese)
+    refute Profile.first.languages.chinese?
   end
 end
