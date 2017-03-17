@@ -19,6 +19,9 @@ end
 # Instance methods
 profile.languages                           #=> #<ActiveFlag::Value: {:english, :japanese}>
 profile.languages.english?                  #=> true
+profile.languages.set?(:english)            #=> true
+profile.languages.unset?(:english)          #=> false
+
 profile.languages.set(:spanish)
 profile.languages.unset(:japanese)
 profile.languages.raw                       #=> 3
