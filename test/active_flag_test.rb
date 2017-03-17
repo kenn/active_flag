@@ -10,6 +10,11 @@ class ActiveFlagTest < Minitest::Test
     refute @profile.languages.chinese?
   end
 
+  def test_set_and_unset?
+    assert @profile.languages.set?(:english)
+    assert @profile.languages.unset?(:chinese)
+  end
+
   def test_set_and_unset
     @profile.languages.set(:chinese)
     assert @profile.languages.chinese?

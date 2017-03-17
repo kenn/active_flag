@@ -4,15 +4,6 @@ module ActiveFlag
       @instance = instance
       @definition = definition
       @column = definition.column
-
-      @definition.keys.each do |key|
-        self.class.class_eval do
-          define_method "#{key}?" do
-            @instance.send(@column).include?(key)
-          end 
-        end
-      end
-
       return self
     end
 
@@ -40,6 +31,22 @@ module ActiveFlag
     def unset!(key, options={})
       unset(key)
       @instance.save!(options)
+    end
+
+    def set?(key)
+      @instance.send(@column).include?(key)
+    end
+
+    def unset?(key)
+      !set?(key)
+    end
+
+    def method_missing(symbol, *args, &block)
+      if key = symbol.to_s.chomp!('?') and @definition.keys.include?(key.to_sym)
+        set?(key.to_sym)
+      else
+        super
+      end
     end
   end
 end
