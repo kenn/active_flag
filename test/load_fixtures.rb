@@ -16,4 +16,8 @@ end
 class SubProfile < Profile
 end
 
+class Other < ActiveRecord::Base
+  flag :others, [:another]
+end
+
 Profile.create(languages: [:english])

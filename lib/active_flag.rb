@@ -10,15 +10,13 @@ module ActiveFlag
   module ClassMethods
     def flag(column, keys)
       unless respond_to?(:active_flags)
-        define_singleton_method :active_flags do
-          @@active_flags
-        end
-        @@active_flags ||= {}
+        class_attribute :active_flags
+        self.active_flags = {}
       end
 
       raise "active_flags on :#{column} already defined!" if active_flags[column]
 
-      @@active_flags[column] = Definition.new(column, keys, self)
+      self.active_flags[column] = Definition.new(column, keys, self)
 
       # Getter
       define_method column do

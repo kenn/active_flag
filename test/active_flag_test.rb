@@ -71,8 +71,12 @@ class ActiveFlagTest < Minitest::Test
   end
 
   def test_subclass
-    refute SubProfile.active_flags.nil?
     assert_equal SubProfile.languages.keys, Profile.languages.keys
     assert_raises { SubProfile.flag :languages, [:english] }
+  end
+
+  def test_same_column_in_other_class
+    assert_equal Profile.others.keys, [:thing]
+    assert_equal Other.others.keys, [:another]
   end
 end
