@@ -64,4 +64,15 @@ class ActiveFlagTest < Minitest::Test
     Profile.languages.unset_all!(:chinese)
     refute Profile.first.languages.chinese?
   end
+
+  def test_multiple_flags
+    assert Profile.languages
+    assert Profile.others
+  end
+
+  def test_subclass
+    refute SubProfile.active_flags.nil?
+    assert_equal SubProfile.languages.keys, Profile.languages.keys
+    assert_raises { SubProfile.flag :languages, [:english] }
+  end
 end

@@ -10,6 +10,10 @@ end
 
 class Profile < ActiveRecord::Base
   flag :languages, [:english, :spanish, :chinese, :french, :japanese]
+  flag :others, [:thing]
+end
+
+class SubProfile < Profile
 end
 
 Profile.create(languages: [:english])
