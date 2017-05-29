@@ -47,6 +47,10 @@ class ActiveFlagTest < Minitest::Test
     assert_equal @profile.languages.raw, 7
   end
 
+  def test_to_s
+    assert_equal @profile.languages.to_s, '[:english]'
+  end
+
   def test_locale
     @profile.languages.set(:spanish)
 

@@ -12,7 +12,11 @@ module ActiveFlag
     end
 
     def to_human
-      @instance.send(@column).to_a.map{|key| @definition.humans[key] }
+      to_a.map{|key| @definition.humans[key] }
+    end
+
+    def to_s
+      to_a.to_s
     end
 
     def set(key)
@@ -34,7 +38,7 @@ module ActiveFlag
     end
 
     def set?(key)
-      @instance.send(@column).include?(key)
+      include?(key)
     end
 
     def unset?(key)
