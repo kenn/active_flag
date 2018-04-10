@@ -41,11 +41,7 @@ module ActiveFlag
         if options[:op] == :and
           where("#{column_name} & #{integer} = #{integer}")
         else
-          if integer & (integer - 1) == 0 # Power of 2, single bit
-            where("#{column_name} = #{integer}")
-          else
-            where("#{column_name} & #{integer} > 0")
-          end
+          where("#{column_name} & #{integer} > 0")
         end
       end
     end
