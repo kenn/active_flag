@@ -83,4 +83,11 @@ class ActiveFlagTest < Minitest::Test
     assert_equal Profile.others.keys, [:thing]
     assert_equal Other.others.keys, [:another]
   end
+
+  def test_scope
+    assert_equal Profile.where_languages(:english).count, 2
+    assert_equal Profile.where_languages(:japanese).count, 2
+    assert_equal Profile.where_languages(:english, :japanese).count, 3
+    assert_equal Profile.where_languages(:english, :japanese, op: :and).count, 1
+  end
 end

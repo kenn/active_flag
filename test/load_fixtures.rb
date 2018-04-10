@@ -21,3 +21,5 @@ class Other < ActiveRecord::Base
 end
 
 Profile.create(languages: [:english])
+Profile.create(languages: [:japanese])
+Profile.create(languages: [:english, :japanese])
