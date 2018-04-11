@@ -16,6 +16,8 @@ class Profile < ActiveRecord::Base
   flag :languages, [:english, :spanish, :chinese, :french, :japanese]
 end
 
+# {:english=>1, :spanish=>2, :chinese=>4, :french=>8, :japanese=>16 }
+
 # Instance methods
 profile.languages                           #=> #<ActiveFlag::Value: {:english, :japanese}>
 profile.languages.english?                  #=> true
@@ -30,8 +32,12 @@ profile.languages.to_a                      #=> [:english, :spanish]
 profile.languages = [:spanish, :japanese]   # Direct assignment that works with forms
 
 # Class methods
-Profile.where_languages(:french, :spanish)  #=> SELECT * FROM profiles WHERE languages & 10 > 0
 Profile.languages.maps                      #=> {:english=>1, :spanish=>2, :chinese=>4, :french=>8, :japanese=>16 }
+Profile.languages.humans                    #=> {:english=>"English", :spanish=>"Spanish", :chinese=>"Chinese", :french=>"French", :japanese=>"Japanese"}
+Profile.languages.pairs                     #=> {"English"=>:english, "Spanish"=>:spanish, "Chinese"=>:chinese, "French"=>:french, "Japanese"=>:japanese}
+
+# Scope methods
+Profile.where_languages(:french, :spanish)  #=> SELECT * FROM profiles WHERE languages & 10 > 0
 Profile.languages.set_all!(:chinese)        #=> UPDATE "profiles" SET languages = COALESCE(languages, 0) | 4
 Profile.languages.unset_all!(:chinese)      #=> UPDATE "profiles" SET languages = COALESCE(languages, 0) & ~4
 ```
@@ -59,7 +65,7 @@ add_column :users, :languages, :integer, null: false, default: 0, limit: 8
 For a querying purpose, use `where_[column]` scope.
 
 ```ruby
-Profile.where_languages(:french)            #=> SELECT * FROM profiles WHERE languages = 8
+Profile.where_languages(:french)            #=> SELECT * FROM profiles WHERE languages & 8 > 0
 ```
 
 Also takes multiple values.
@@ -73,7 +79,7 @@ By default, it searches with `or` operation, so the query above returns profiles
 If you want to change it to `and` operation, you can specify:
 
 ```ruby
-Profile.where_languages(:french, :spanish, op: :and)
+Profile.where_languages(:french, :spanish, op: :and) #=> SELECT * FROM profiles WHERE languages = 10
 ```
 
 ## Translation
@@ -110,10 +116,12 @@ Thanks to the translation support, forms just work as you would expect with the 
 
 ```ruby
 # With FormBuilder
+
 = form_for(@profile) do |f|
   = f.collection_check_boxes :languages, Profile.languages.pairs
 
 # With SimpleForm
+
 = simple_form_for(@profile) do |f|
   = f.input :languages, as: :check_boxes, collection: Profile.languages.pairs
 ```
