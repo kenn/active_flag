@@ -11,6 +11,8 @@ Perfect solution to store multiple boolean values such as preferences, notificat
 
 If you want a simple enum column, take a look at [EnumAccessor](https://github.com/kenn/enum_accessor).
 
+If you need to work with huge bit arrays, take a look at [Bitwise](https://github.com/kenn/bitwise).
+
 ## Usage
 
 ```ruby
