@@ -9,6 +9,8 @@ Perfect solution to store multiple boolean values such as preferences, notificat
 * **Single column to group multiple boolean values.** You don't need to have many separate columns. You don't even need a migration when you add a new flag item to the list.
 * **Fast bitwise operations.** `WHERE languages & 3 > 0` is faster than `WHERE (english = true) OR (spanish = true) OR ...`
 
+If you want a simple enum column, take a look at [EnumAccessor](https://github.com/kenn/enum_accessor).
+
 ## Usage
 
 ```ruby
