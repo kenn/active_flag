@@ -5,14 +5,14 @@ module ActiveFlag
     def initialize(column, keys, klass)
       @column = column
       @keys = keys.freeze
-      @maps = Hash[keys.map.with_index{|key, i| [key, 2**i] }].freeze
+      @maps = Hash[keys.map.with_index{ |key, i| [key, 2**i] }].freeze
       @klass = klass
     end
 
     def humans
       @humans ||= {}
       @humans[I18n.locale] ||= begin
-        @keys.map{|key| [key, human(key)] }.to_h
+        @keys.map { |key| [key, human(key)] }.to_h
       end
     end
 
@@ -34,7 +34,8 @@ module ActiveFlag
 
     def to_i(arg)
       arg = [arg] unless arg.is_a?(Enumerable)
-      arg.map{|s| s && @maps[s.to_s.to_sym] || 0 }.sum
+      arg = arg.uniq
+      arg.map { |s| s && @maps[s.to_s.to_sym] || 0 }.sum
     end
 
     def to_value(instance, integer)
@@ -42,7 +43,7 @@ module ActiveFlag
     end
 
     def to_array(integer)
-      @maps.map{|key, mask| (integer & mask > 0) ? key : nil }.compact
+      @maps.map { |key, mask| (integer & mask > 0) ? key : nil }.compact
     end
 
   private
