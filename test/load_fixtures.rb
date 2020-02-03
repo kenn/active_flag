@@ -6,11 +6,13 @@ ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: ':memory:'
 
 ActiveRecord::Base.connection.create_table :profiles, force: true do |t|
   t.integer :languages, null: false, default: 0
+  t.integer :figures
 end
 
 class Profile < ActiveRecord::Base
   flag :languages, [:english, :spanish, :chinese, :french, :japanese]
   flag :others, [:thing]
+  flag :figures, [:square, :circle]
 end
 
 class SubProfile < Profile
