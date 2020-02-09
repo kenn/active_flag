@@ -42,8 +42,12 @@ Profile.languages.pairs                     #=> {"English"=>:english, "Spanish"=
 
 # Scope methods
 Profile.where_languages(:french, :spanish)  #=> SELECT * FROM profiles WHERE languages & 10 > 0
+
 Profile.languages.set_all!(:chinese)        #=> UPDATE "profiles" SET languages = COALESCE(languages, 0) | 4
 Profile.languages.unset_all!(:chinese)      #=> UPDATE "profiles" SET languages = COALESCE(languages, 0) & ~4
+
+Profile.flag_for_languages(:chinese)        #=> 4
+Profile.languages_for_flag(4)               #=> #<ActiveFlag::Value: {:chinese}>
 ```
 
 ## Install
@@ -64,7 +68,9 @@ add_column :users, :languages, :integer, null: false, default: 0, limit: 8
 
 `limit: 8` is only required if you need more than 32 flags.
 
-## Query
+## Scopes
+
+### where_[column] scope
 
 For a querying purpose, use `where_[column]` scope.
 
@@ -84,6 +90,28 @@ If you want to change it to `and` operation, you can specify:
 
 ```ruby
 Profile.where_languages(:french, :spanish, op: :and) #=> SELECT * FROM profiles WHERE languages = 10
+```
+
+### flag_for_[column] scope
+
+To find out which bit the flags correspond to, use the method:
+```ruby
+Profile.flag_for_languages                     #=> 0
+Profile.flag_for_languages(:fake)              #=> 0
+Profile.flag_for_languages(:spanish)           #=> 2
+Profile.flag_for_languages(:spanish, :spanish) #=> 2
+Profile.flag_for_languages(:chinese)           #=> 4
+Profile.flag_for_languages(:spanish, :chinese) #=> 6
+Profile.flag_for_languages(:chinese, :spanish) #=> 6
+```
+
+### [column]_for_flag scope
+
+To find out which bit matches your flags, use the method:
+```ruby
+Profile.languages_for_flag(2) #=> #<ActiveFlag::Value: {:spanish}>
+Profile.languages_for_flag(4) #=> #<ActiveFlag::Value: {:chinese}>
+Profile.languages_for_flag(6) #=> #<ActiveFlag::Value: {:spanish, :chinese}>
 ```
 
 ## Translation

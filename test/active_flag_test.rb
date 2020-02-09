@@ -114,10 +114,28 @@ class ActiveFlagTest < Minitest::Test
     assert_equal Other.others.keys, [:another]
   end
 
-  def test_scope
+  def test_where_column
     assert_equal Profile.where_languages(:english).count, 2
     assert_equal Profile.where_languages(:japanese).count, 2
     assert_equal Profile.where_languages(:english, :japanese).count, 3
     assert_equal Profile.where_languages(:english, :japanese, op: :and).count, 1
+  end
+
+  def test_flag_for_column
+    assert_equal Profile.flag_for_languages, 0
+    assert_equal Profile.flag_for_languages(nil), 0
+    assert_equal Profile.flag_for_languages(:fake), 0
+    assert_equal Profile.flag_for_languages(:spanish), 2
+    assert_equal Profile.flag_for_languages(:spanish, :spanish), 2
+    assert_equal Profile.flag_for_languages(:chinese), 4
+  end
+
+  def test_column_for_flag
+    assert_equal Profile.languages_for_flag(0), ActiveFlag::Value.new
+    assert_equal Profile.languages_for_flag(0), ActiveFlag::Value.new(nil)
+    assert_equal Profile.languages_for_flag(2), ActiveFlag::Value.new([:spanish])
+    refute_equal Profile.languages_for_flag(4), ActiveFlag::Value.new([:spanish, :spanish])
+    assert_equal Profile.languages_for_flag(4), ActiveFlag::Value.new([:chinese])
+    assert_equal Profile.languages_for_flag(6), ActiveFlag::Value.new([:spanish, :chinese])
   end
 end

@@ -33,7 +33,7 @@ module ActiveFlag
         active_flags[column]
       end
 
-      # Scopes
+      # Scope where_column
       define_singleton_method "where_#{column}" do |*args|
         options = args.extract_options!
         integer = active_flags[column].to_i(args)
@@ -43,6 +43,16 @@ module ActiveFlag
         else
           where("#{column_name} & #{integer} > 0")
         end
+      end
+
+      # Scope flag_for_column
+      define_singleton_method "flag_for_#{column}" do |*args|
+        active_flags[column].to_i(args)
+      end
+
+      # Scope column_for_flag
+      define_singleton_method "#{column}_for_flag" do |entry|
+        active_flags[column].to_value(self, entry)
       end
     end
   end
