@@ -31,7 +31,7 @@ class ActiveFlagTest < Minitest::Test
     refute Profile.first.languages.chinese?
   end
 
-  def test_direct_assign
+  def test_direct_symbol_assign
     @profile.languages = [:french, :japanese]
     assert @profile.languages.french?
     assert @profile.languages.japanese?
@@ -53,6 +53,18 @@ class ActiveFlagTest < Minitest::Test
   def test_default_nil
     assert_equal @profile.figures.raw, 0
     assert @profile.figures, 0
+  end
+
+  def test_direct_string_assign
+    @profile.languages = ['french', 'japanese']
+    assert @profile.languages.french?
+    assert @profile.languages.japanese?
+  end
+
+  def test_duplicate_direct_assign
+    @profile.languages = [:spanish, :spanish]
+    assert @profile.languages.spanish?
+    refute @profile.languages.chinese?
   end
 
   def test_raw
