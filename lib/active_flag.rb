@@ -20,7 +20,7 @@ module ActiveFlag
 
       # Getter
       define_method column do
-        self.class.active_flags[column].to_value(self, read_attribute(column))
+        self.class.active_flags[column].to_value(self, read_attribute(column).to_i)
       end
 
       # Setter

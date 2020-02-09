@@ -8,7 +8,7 @@ module ActiveFlag
     end
 
     def raw
-      @instance.read_attribute(@column)
+      @instance.read_attribute(@column).to_i
     end
 
     def to_human

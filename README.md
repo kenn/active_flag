@@ -54,7 +54,7 @@ gem 'active_flag'
 
 ### Migration
 
-Always set `0` as a default.
+It is recommended to set `0` by default.
 
 ```ruby
 t.integer :languages,                    null: false, default: 0, limit: 8

@@ -37,6 +37,24 @@ class ActiveFlagTest < Minitest::Test
     assert @profile.languages.japanese?
   end
 
+  def test_direct_assign_nil
+    @profile.figures = [:square, :circle]
+    assert @profile.figures.square?
+    assert @profile.figures.circle?
+  end
+
+  def test_default_empty_array
+    @profile.languages = []
+
+    assert_equal @profile.languages.raw, 0
+    assert @profile.languages, 0
+  end
+
+  def test_default_nil
+    assert_equal @profile.figures.raw, 0
+    assert @profile.figures, 0
+  end
+
   def test_direct_string_assign
     @profile.languages = ['french', 'japanese']
     assert @profile.languages.french?
