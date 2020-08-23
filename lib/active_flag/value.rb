@@ -29,12 +29,12 @@ module ActiveFlag
 
     def set!(key, options={})
       set(key)
-      @instance.save!(options)
+      @instance.save!(**options)
     end
 
     def unset!(key, options={})
       unset(key)
-      @instance.save!(options)
+      @instance.save!(**options)
     end
 
     def set?(key)
