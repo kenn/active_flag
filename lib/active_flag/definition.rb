@@ -59,7 +59,7 @@ module ActiveFlag
       defaults << :"active_flag.#{@column}.#{key}"
       defaults << options.delete(:default) if options[:default]
       defaults << key.to_s.humanize
-      I18n.translate defaults.shift, options.reverse_merge(count: 1, default: defaults)
+      I18n.translate defaults.shift, **options.reverse_merge(count: 1, default: defaults)
     end
   end
 end
