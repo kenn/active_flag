@@ -39,6 +39,7 @@ profile.languages = [:spanish, :japanese]   # Direct assignment that works with 
 Profile.languages.maps                      #=> {:english=>1, :spanish=>2, :chinese=>4, :french=>8, :japanese=>16 }
 Profile.languages.humans                    #=> {:english=>"English", :spanish=>"Spanish", :chinese=>"Chinese", :french=>"French", :japanese=>"Japanese"}
 Profile.languages.pairs                     #=> {"English"=>:english, "Spanish"=>:spanish, "Chinese"=>:chinese, "French"=>:french, "Japanese"=>:japanese}
+Profile.languages.to_array(3)               #=> [:english, :spanish]
 
 # Scope methods
 Profile.where_languages(:french, :spanish)  #=> SELECT * FROM profiles WHERE languages & 10 > 0
