@@ -1,3 +1,5 @@
+require 'set'
+
 module ActiveFlag
   class Value < Set
     def with(instance, definition)
