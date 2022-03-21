@@ -85,19 +85,19 @@ Profile.where_languages(:french, :spanish)  #=> SELECT * FROM profiles WHERE lan
 
 By default, it returns profiles that have either French or Spanish.
 
-If you want to get profiles that have both French or Spanish, you can use:
+To get profiles that have both French and Spanish, use:
 
 ```ruby
 Profile.where_all_languages(:french, :spanish) #=> SELECT * FROM profiles WHERE languages & 10 = 10
 ```
 
-If you need to exclude the profiles, that have either French or Spanish, from the scope, use:
+To get profiles that do not have either French or Spanish, use:
 
 ```ruby
 Profile.where_not_languages(:french, :spanish) #=> SELECT * FROM profiles WHERE languages & 10 = 0
 ```
 
-To exclude the profiles that have both French and Spanish at the same time, please use:
+To get profiles that do not have both French and Spanish, use:
 
 ```ruby
 Profile.where_not_all_languages(:french, :spanish) #=> SELECT * FROM profiles WHERE languages & 10 < 10

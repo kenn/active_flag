@@ -35,7 +35,7 @@ module ActiveFlag
 
       # Scopes
       define_singleton_method "where_#{column}" do |*args|
-        options, integer, column_name = send "_where_#{column}_attributes", *args
+        options, integer, column_name = send "_where_#{column}", *args
         if options[:op] == :and
           ActiveSupport::Deprecation.warn('op: :and is deprecated, use where_all instead')
           where("#{column_name} & #{integer} = #{integer}")
@@ -45,21 +45,21 @@ module ActiveFlag
       end
 
       define_singleton_method "where_all_#{column}" do |*args|
-        _options, integer, column_name = send "_where_#{column}_attributes", *args
+        _options, integer, column_name = send "_where_#{column}", *args
         where("#{column_name} & #{integer} = #{integer}")
       end
 
       define_singleton_method "where_not_#{column}" do |*args|
-        _options, integer, column_name = send "_where_#{column}_attributes", *args
+        _options, integer, column_name = send "_where_#{column}", *args
         where("#{column_name} & #{integer} = 0")
       end
 
       define_singleton_method "where_not_all_#{column}" do |*args|
-        _options, integer, column_name = send "_where_#{column}_attributes", *args
+        _options, integer, column_name = send "_where_#{column}", *args
         where("#{column_name} & #{integer} < #{integer}")
       end
 
-      define_singleton_method "_where_#{column}_attributes" do |*args|
+      define_singleton_method "_where_#{column}" do |*args|
         return [
           args.extract_options!,
           active_flags[column].to_i(args),
