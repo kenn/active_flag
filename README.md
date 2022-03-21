@@ -43,6 +43,9 @@ Profile.languages.to_array(3)               #=> [:english, :spanish]
 
 # Scope methods
 Profile.where_languages(:french, :spanish)  #=> SELECT * FROM profiles WHERE languages & 10 > 0
+Profile.where_all_languages(:french, :spanish)  #=> SELECT * FROM profiles WHERE languages & 10 = 10
+Profile.where_not_languages(:french, :spanish)  #=> SELECT * FROM profiles WHERE languages & 10 = 0
+Profile.where_not_all_languages(:french, :spanish)  #=> SELECT * FROM profiles WHERE languages & 10 < 10
 Profile.languages.set_all!(:chinese)        #=> UPDATE "profiles" SET languages = COALESCE(languages, 0) | 4
 Profile.languages.unset_all!(:chinese)      #=> UPDATE "profiles" SET languages = COALESCE(languages, 0) & ~4
 ```
@@ -67,7 +70,8 @@ add_column :users, :languages, :integer, null: false, default: 0, limit: 8
 
 ## Query
 
-For a querying purpose, use `where_[column]` scope.
+For a querying purpose, use `where_[column]`, `where_all_[column]`,
+`where_not_[column]` and `where_not_all_[column]` scopes.
 
 ```ruby
 Profile.where_languages(:french)            #=> SELECT * FROM profiles WHERE languages & 8 > 0
@@ -79,12 +83,24 @@ Also takes multiple values.
 Profile.where_languages(:french, :spanish)  #=> SELECT * FROM profiles WHERE languages & 10 > 0
 ```
 
-By default, it searches with `or` operation, so the query above returns profiles that have either French or Spanish.
+By default, it returns profiles that have either French or Spanish.
 
-If you want to change it to `and` operation, you can specify:
+If you want to get profiles that have both French or Spanish, you can use:
 
 ```ruby
-Profile.where_languages(:french, :spanish, op: :and) #=> SELECT * FROM profiles WHERE languages = 10
+Profile.where_all_languages(:french, :spanish) #=> SELECT * FROM profiles WHERE languages & 10 = 10
+```
+
+If you need to exclude the profiles, that have either French or Spanish, from the scope, use:
+
+```ruby
+Profile.where_not_languages(:french, :spanish) #=> SELECT * FROM profiles WHERE languages & 10 = 0
+```
+
+To exclude the profiles that have both French and Spanish at the same time, please use:
+
+```ruby
+Profile.where_not_all_languages(:french, :spanish) #=> SELECT * FROM profiles WHERE languages & 10 < 10
 ```
 
 ## Translation
