@@ -119,5 +119,11 @@ class ActiveFlagTest < Minitest::Test
     assert_equal Profile.where_languages(:japanese).count, 2
     assert_equal Profile.where_languages(:english, :japanese).count, 3
     assert_equal Profile.where_languages(:english, :japanese, op: :and).count, 1
+    assert_equal Profile.where_all_languages(:english, :japanese).count, 1
+    assert_equal Profile.where_not_languages(:english).count, 1
+    assert_equal Profile.where_not_languages(:english, :japanese).count, 0
+    assert_equal Profile.where_not_all_languages(:english, :japanese).count, 2
+    assert_equal Profile.where_not_languages(:chinese).count, 3
+    assert_equal Profile.where_not_all_languages(:chinese).count, 3
   end
 end
