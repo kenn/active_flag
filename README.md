@@ -1,6 +1,7 @@
 # ActiveFlag - Bit array for ActiveRecord
 
-[![Build Status](https://travis-ci.org/kenn/active_flag.svg)](https://travis-ci.org/kenn/active_flag)
+[![Build Status](https://travis-ci.com/kenn/active_flag.svg)](https://travis-ci.com/kenn/active_flag)
+[![Build Status](https://github.com/kenn/active_flag/actions/workflows/ci/badge.svg)
 
 Store up to 64 multiple flags ([bit array](https://en.wikipedia.org/wiki/Bit_array)) in a single integer column with ActiveRecord. From a UI standpoint, it can be used as a  multi-select checkbox storage.
 
