@@ -18,9 +18,10 @@ If you need to work with huge bit arrays, take a look at [Bitwise](https://githu
 ```ruby
 class Profile < ActiveRecord::Base
   flag :languages, [:english, :spanish, :chinese, :french, :japanese]
+  # {:english=>1, :spanish=>2, :chinese=>4, :french=>8, :japanese=>16 }
+  # OR you can specify values explicitly for future safety & convinience
+  flag :languages, { english: 1, spanish: 2, chinese: 4, french: 8, japanese: 16 }
 end
-
-# {:english=>1, :spanish=>2, :chinese=>4, :french=>8, :japanese=>16 }
 
 # Instance methods
 profile.languages                           #=> #<ActiveFlag::Value: {:english, :japanese}>

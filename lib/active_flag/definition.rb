@@ -4,8 +4,26 @@ module ActiveFlag
 
     def initialize(column, keys, klass)
       @column = column
-      @keys = keys.freeze
-      @maps = Hash[keys.map.with_index{ |key, i| [key, 2**i] }].freeze
+      keys = keys.dup
+      if keys.is_a?(Hash)
+        keys.symbolize_keys!
+        if invalid = keys.values.find{|i| !i.is_a?(Integer) || (i & i-1) > 0 }
+          raise [invalid, " is not an Integer with a base of 2"].join
+        end
+        unless keys.values.size == keys.values.uniq.size
+          raise "duplicate values detected"
+        end
+
+        @keys = keys.keys.freeze
+        @maps = keys.freeze
+      else
+        keys = keys.map(&:to_sym)
+        unless keys.size == keys.uniq.size
+          raise "duplicate keys detected"
+        end
+        @keys = keys.freeze
+        @maps = Hash[keys.map.with_index{ |key, i| [key, 2**i] }].freeze
+      end
       @klass = klass
     end
 
