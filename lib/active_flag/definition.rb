@@ -57,7 +57,7 @@ module ActiveFlag
     end
 
     def to_value(instance, integer)
-      Value.new(to_array(integer)).with(instance, self)
+      Value.new(to_array(integer), instance, self)
     end
 
     def to_array(integer)

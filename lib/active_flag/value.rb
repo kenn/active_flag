@@ -2,11 +2,15 @@ require 'set'
 
 module ActiveFlag
   class Value < Set
-    def with(instance, definition)
+    def initialize(values, instance, definition)
+      super(values)
       @instance = instance
       @definition = definition
       @column = definition.column
-      return self
+
+      @definition.keys.each do |key|
+        define_singleton_method( [key, '?'].join ) { set?( key.to_sym ) }
+      end
     end
 
     def raw
@@ -45,14 +49,6 @@ module ActiveFlag
 
     def unset?(key)
       !set?(key)
-    end
-
-    def method_missing(symbol, *args, &block)
-      if key = symbol.to_s.chomp!('?') and @definition.keys.include?(key.to_sym)
-        set?(key.to_sym)
-      else
-        super
-      end
     end
   end
 end
