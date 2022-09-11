@@ -38,25 +38,25 @@ module ActiveFlag
         options, integer, column_name = send "_where_#{column}", *args
         if options[:op] == :and
           ActiveSupport::Deprecation.warn('op: :and is deprecated, use where_all instead')
-          where("#{column_name} & #{integer} = #{integer}")
+          where("#{table_name}.#{column_name} & #{integer} = #{integer}")
         else
-          where("#{column_name} & #{integer} > 0")
+          where("#{table_name}.#{column_name} & #{integer} > 0")
         end
       end
 
       define_singleton_method "where_all_#{column}" do |*args|
         _options, integer, column_name = send "_where_#{column}", *args
-        where("#{column_name} & #{integer} = #{integer}")
+        where("#{table_name}.#{column_name} & #{integer} = #{integer}")
       end
 
       define_singleton_method "where_not_#{column}" do |*args|
         _options, integer, column_name = send "_where_#{column}", *args
-        where("#{column_name} & #{integer} = 0")
+        where("#{table_name}.#{column_name} & #{integer} = 0")
       end
 
       define_singleton_method "where_not_all_#{column}" do |*args|
         _options, integer, column_name = send "_where_#{column}", *args
-        where("#{column_name} & #{integer} < #{integer}")
+        where("#{table_name}.#{column_name} & #{integer} < #{integer}")
       end
 
       define_singleton_method "_where_#{column}" do |*args|
