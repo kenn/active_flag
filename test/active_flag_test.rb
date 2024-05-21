@@ -15,12 +15,25 @@ class ActiveFlagTest < Minitest::Test
     assert @profile.languages.unset?(:chinese)
   end
 
+  def test_set_and_unset_strings?
+    assert @profile.features.set?(Features::EMAILS)
+    assert @profile.features.unset?(Features::STREAMING)
+  end
+
   def test_set_and_unset
     @profile.languages.set(:chinese)
     assert @profile.languages.chinese?
 
     @profile.languages.unset(:chinese)
     refute @profile.languages.chinese?
+  end
+
+  def test_set_and_unset_strings
+    @profile.features.set(Features::STREAMING)
+    assert @profile.features.set?(Features::STREAMING)
+
+    @profile.features.unset(Features::STREAMING)
+    refute @profile.features.set?(Features::STREAMING)
   end
 
   def test_set_and_unset!
@@ -35,6 +48,12 @@ class ActiveFlagTest < Minitest::Test
     @profile.languages = [:french, :japanese]
     assert @profile.languages.french?
     assert @profile.languages.japanese?
+  end
+
+  def test_string_assign
+    @profile.features = [Features::STREAMING, Features::AUTOMATION]
+    assert @profile.features.set?(Features::STREAMING)
+    assert @profile.features.set?(Features::AUTOMATION)
   end
 
   def test_direct_assign_nil
@@ -75,6 +94,9 @@ class ActiveFlagTest < Minitest::Test
 
     @profile.languages.set(:chinese)
     assert_equal @profile.languages.raw, 7
+
+    @profile.features.set(Features::AUTOMATION)
+    assert_equal @profile.features.raw, 5
   end
 
   def test_to_s
@@ -95,8 +117,14 @@ class ActiveFlagTest < Minitest::Test
     Profile.languages.set_all!(:chinese)
     assert Profile.first.languages.chinese?
 
+    Profile.features.set_all!(Features::STREAMING)
+    assert Profile.first.features.set?(Features::STREAMING)
+
     Profile.languages.unset_all!(:chinese)
     refute Profile.first.languages.chinese?
+
+    Profile.features.unset_all!(Features::STREAMING)
+    refute Profile.first.features.set?(Features::STREAMING)
   end
 
   def test_multiple_flags
@@ -127,5 +155,8 @@ class ActiveFlagTest < Minitest::Test
     assert_equal Profile.where_not_all_languages(:english, :japanese).count, 2
     assert_equal Profile.where_not_languages(:chinese).count, 3
     assert_equal Profile.where_not_all_languages(:chinese).count, 3
+    assert_equal Profile.where_features(Features::EMAILS, Features::STREAMING).count, 2
+    assert_equal Profile.where_features(Features::AUTOMATION).count, 0
+    assert_equal Profile.where_not_features(Features::AUTOMATION).count, 3
   end
 end

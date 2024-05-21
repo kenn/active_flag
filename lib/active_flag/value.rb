@@ -22,11 +22,11 @@ module ActiveFlag
     end
 
     def set(key)
-      @instance.send "#{@column}=", add(key)
+      @instance.send "#{@column}=", add(key.to_sym)
     end
 
     def unset(key)
-      @instance.send "#{@column}=", delete(key)
+      @instance.send "#{@column}=", delete(key.to_sym)
     end
 
     def set!(key, options={})
@@ -40,11 +40,11 @@ module ActiveFlag
     end
 
     def set?(key)
-      include?(key)
+      include?(key.to_sym)
     end
 
     def unset?(key)
-      !set?(key)
+      !set?(key.to_sym)
     end
 
     def method_missing(symbol, *args, &block)

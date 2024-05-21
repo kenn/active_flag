@@ -16,7 +16,7 @@ module ActiveFlag
 
       raise "active_flags on :#{column} already defined!" if active_flags[column]
 
-      self.active_flags[column] = Definition.new(column, keys, self)
+      self.active_flags[column] = Definition.new(column, keys.map(&:to_sym), self)
 
       # Getter
       define_method column do

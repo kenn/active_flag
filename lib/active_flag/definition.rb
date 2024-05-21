@@ -25,11 +25,11 @@ module ActiveFlag
     # http://stackoverflow.com/a/12928899/157384
 
     def set_all!(key)
-      @klass.update_all("#{@column} = COALESCE(#{@column}, 0) | #{@maps[key]}")
+      @klass.update_all("#{@column} = COALESCE(#{@column}, 0) | #{@maps[key.to_sym]}")
     end
 
     def unset_all!(key)
-      @klass.update_all("#{@column} = COALESCE(#{@column}, 0) & ~#{@maps[key]}")
+      @klass.update_all("#{@column} = COALESCE(#{@column}, 0) & ~#{@maps[key.to_sym]}")
     end
 
     def to_i(arg)
