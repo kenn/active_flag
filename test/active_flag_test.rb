@@ -128,4 +128,14 @@ class ActiveFlagTest < Minitest::Test
     assert_equal Profile.where_not_languages(:chinese).count, 3
     assert_equal Profile.where_not_all_languages(:chinese).count, 3
   end
+
+  def test_joining_tables
+    assert_equal Profile.joins(:users).where_languages(:english).count, 2
+    assert_equal Profile.joins(:users).where_languages(:japanese).count, 1
+    assert_equal Profile.joins(:users).where_languages(:chinese).count, 0
+
+    assert_equal User.joins(:profile).where(profile: Profile.where_languages(:english)).count, 2
+    assert_equal User.joins(:profile).where(profile: Profile.where_languages(:japanese)).count, 1
+    assert_equal User.joins(:profile).where(profile: Profile.where_languages(:chinese)).count, 0
+  end
 end
