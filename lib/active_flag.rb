@@ -59,11 +59,12 @@ module ActiveFlag
         where("#{column_name} & #{integer} < #{integer}")
       end
 
+      # utility method to extract parameters
       define_singleton_method "_where_#{column}" do |*args|
         return [
           args.extract_options!,
           active_flags[column].to_i(args),
-          connection.quote_table_name_for_assignment(table_name, column)
+          "#{connection.quote_table_name(table_name)}.#{connection.quote_column_name(column)}"
         ]
       end
     end
