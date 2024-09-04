@@ -1,6 +1,5 @@
 name: ci
 on: [pull_request, push]
-
 jobs:
   test:
     strategy:
@@ -24,7 +23,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
-          bundler: true
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       - run: bundle exec rake
