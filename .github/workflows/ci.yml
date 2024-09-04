@@ -6,20 +6,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby:
-          - '3.3'
-          - '3.2'
-          - '3.1'
-          - ruby-head
-        rails_version:
-          - '7.2'
-          - '6.1'
-        exclude:
-          - ruby: '3.2'
-            rails_version: '6.1'
-          - ruby: '3.3'
-            rails_version: '6.1'
+        include:
           - ruby: ruby-head
+            rails_version: '7.2'
+          - ruby: '3.3'
+            rails_version: '7.2'
+          - ruby: '3.2'
+            rails_version: '7.2'
+          - ruby: '3.1'
+            rails_version: '7.2'
+          - ruby: '3.1'
             rails_version: '6.1'
     runs-on: ubuntu-latest
     env:
