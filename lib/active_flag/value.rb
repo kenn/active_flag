@@ -48,8 +48,8 @@ module ActiveFlag
     end
 
     def method_missing(symbol, *args, &block)
-      if key = symbol.to_s.chomp!('?') and @definition.keys.include?(key.to_sym)
-        set?(key.to_sym)
+      if key = symbol.to_s.chomp('?').to_sym and @definition.keys.include?(key)
+        set?(key)
       else
         super
       end
