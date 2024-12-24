@@ -61,6 +61,16 @@ module ActiveFlag
           "#{connection.quote_table_name(table_name)}.#{connection.quote_column_name(column)}"
         ]
       end
+
+      define_singleton_method "set_all!" do |key|
+        af_definition = active_flags.values.first
+        af_definition.set_all!(key, scope: self)
+      end
+
+      define_singleton_method "unset_all!" do |key|
+        af_definition = active_flags.values.first
+        af_definition.unset_all!(key, scope: self)
+      end
     end
   end
 end

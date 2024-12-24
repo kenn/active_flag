@@ -46,6 +46,8 @@ Profile.where_languages(:french, :spanish)  #=> SELECT * FROM profiles WHERE lan
 Profile.where_all_languages(:french, :spanish)  #=> SELECT * FROM profiles WHERE languages & 10 = 10
 Profile.where_not_languages(:french, :spanish)  #=> SELECT * FROM profiles WHERE languages & 10 = 0
 Profile.where_not_all_languages(:french, :spanish)  #=> SELECT * FROM profiles WHERE languages & 10 < 10
+Profile.where_not_languages(:french).set_all!(:french) #=> UPDATE "profiles" SET languages = COALESCE(languages, 0) | 8 WHERE ("profiles"."languages" & 8 = 0)
+Profile.where_languages(:french).unset_all!(:french) #=> UPDATE "profiles" SET languages = COALESCE(languages, 0) & ~8 WHERE ("profiles"."languages" & 8 > 0)
 Profile.languages.set_all!(:chinese)        #=> UPDATE "profiles" SET languages = COALESCE(languages, 0) | 4
 Profile.languages.unset_all!(:chinese)      #=> UPDATE "profiles" SET languages = COALESCE(languages, 0) & ~4
 ```

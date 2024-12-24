@@ -24,12 +24,12 @@ module ActiveFlag
     # Set / unset a bit on all records for migration
     # http://stackoverflow.com/a/12928899/157384
 
-    def set_all!(key)
-      @klass.update_all("#{@column} = COALESCE(#{@column}, 0) | #{@maps[key]}")
+    def set_all!(key, scope: @klass)
+      scope.update_all("#{@column} = COALESCE(#{@column}, 0) | #{@maps[key]}")
     end
 
-    def unset_all!(key)
-      @klass.update_all("#{@column} = COALESCE(#{@column}, 0) & ~#{@maps[key]}")
+    def unset_all!(key, scope: @klass)
+      scope.update_all("#{@column} = COALESCE(#{@column}, 0) & ~#{@maps[key]}")
     end
 
     def to_i(arg)
