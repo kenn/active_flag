@@ -1,3 +1,4 @@
+require 'logger'
 require 'active_flag'
 
 require 'minitest/autorun'
