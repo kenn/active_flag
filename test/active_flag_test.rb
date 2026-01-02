@@ -99,6 +99,17 @@ class ActiveFlagTest < Minitest::Test
     refute Profile.first.languages.chinese?
   end
 
+  def test_scoped_set_all_and_unset_all
+    scope = Profile.where(id: @profile.id)
+    scope.languages.set_all!(:chinese)
+
+    assert @profile.reload.languages.chinese?
+    refute Profile.where.not(id: @profile.id).first.languages.chinese?
+
+    scope.languages.unset_all!(:chinese)
+    refute @profile.reload.languages.chinese?
+  end
+
   def test_multiple_flags
     assert Profile.languages
     assert Profile.others

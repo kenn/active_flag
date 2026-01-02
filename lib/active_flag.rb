@@ -33,6 +33,15 @@ module ActiveFlag
         active_flags[column]
       end
 
+      if respond_to?(:generated_relation_methods, true)
+        send(:generated_relation_methods).module_eval do
+          define_method column.to_s.pluralize do
+            klass.active_flags[column].with_scope(self)
+          end
+        end
+      end
+
+
       # Scopes
       define_singleton_method "where_#{column}" do |*args|
         integer, column_name = send("_where_#{column}", *args)
