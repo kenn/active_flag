@@ -110,6 +110,12 @@ class ActiveFlagTest < Minitest::Test
     refute @profile.reload.languages.chinese?
   end
 
+  def test_scoped_set_all_rejects_complex_relations
+    scope = Profile.joins(:users)
+    assert_raises(ArgumentError) { scope.languages.set_all!(:chinese) }
+    assert_raises(ArgumentError) { scope.languages.unset_all!(:chinese) }
+  end
+
   def test_multiple_flags
     assert Profile.languages
     assert Profile.others
