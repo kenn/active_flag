@@ -7,6 +7,13 @@ module ActiveFlag
       @keys = keys.freeze
       @maps = Hash[keys.map.with_index{ |key, i| [key, 2**i] }].freeze
       @klass = klass
+      @scope = klass
+    end
+
+    def with_scope(scope)
+      dup.tap do |d|
+        d.instance_variable_set(:@scope, scope)
+      end
     end
 
     def humans
@@ -25,11 +32,13 @@ module ActiveFlag
     # http://stackoverflow.com/a/12928899/157384
 
     def set_all!(key)
-      @klass.update_all("#{@column} = COALESCE(#{@column}, 0) | #{@maps[key]}")
+      ensure_simple_scope!
+      @scope.update_all("#{@column} = COALESCE(#{@column}, 0) | #{@maps[key]}")
     end
 
     def unset_all!(key)
-      @klass.update_all("#{@column} = COALESCE(#{@column}, 0) & ~#{@maps[key]}")
+      ensure_simple_scope!
+      @scope.update_all("#{@column} = COALESCE(#{@column}, 0) & ~#{@maps[key]}")
     end
 
     def to_i(arg)
@@ -47,6 +56,17 @@ module ActiveFlag
     end
 
   private
+
+    def ensure_simple_scope!
+      return unless @scope.is_a?(ActiveRecord::Relation)
+
+      extras = @scope.values.except(:where)
+      return if extras.values.all? {|value| value.nil? || (value.respond_to?(:empty?) && value.empty?) }
+
+      raise ArgumentError, "set_all!/unset_all! only support simple where scopes. " \
+                           "For complex queries, resolve to IDs first: " \
+                           "#{@klass.name}.where(id: scope.ids).#{@column}.set_all!(key)"
+    end
 
     # Human-friendly print on class level
     def human(key, options={})
