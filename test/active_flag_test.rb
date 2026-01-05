@@ -120,6 +120,12 @@ class ActiveFlagTest < Minitest::Test
     assert_raises(ArgumentError) { scope.languages.unset_all!(:chinese) }
   end
 
+  def test_relation_method_name_conflict
+    scope = Grant.where(id: Grant.first.id)
+    assert_kind_of Hash, scope.send(:values)
+    assert_kind_of ActiveFlag::Definition, Grant.values
+  end
+
   def test_multiple_flags
     assert Profile.languages
     assert Profile.others

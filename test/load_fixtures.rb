@@ -15,6 +15,10 @@ ActiveRecord::Base.connection.create_table :users, force: true do |t|
   t.integer :profile_id, null: false
 end
 
+ActiveRecord::Base.connection.create_table :grants, force: true do |t|
+  t.integer :values, null: false, default: 0
+end
+
 class Profile < ActiveRecord::Base
   has_many :users
 
@@ -34,6 +38,10 @@ class Other < ActiveRecord::Base
   flag :others, [:another]
 end
 
+class Grant < ActiveRecord::Base
+  flag :values, [:owner, :editor, :viewer]
+end
+
 english_profile = Profile.create(languages: [:english])
 japanese_profile = Profile.create(languages: [:japanese])
 Profile.create(languages: [:english, :japanese])
@@ -41,3 +49,5 @@ Profile.create(languages: [:english, :japanese])
 User.create(name: 'Prince Harry', profile: english_profile)
 User.create(name: 'Queen Elizabeth', profile: english_profile)
 User.create(name: 'Shigeru Myamoto', profile: japanese_profile)
+
+Grant.create(values: [:owner])

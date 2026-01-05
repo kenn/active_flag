@@ -29,14 +29,17 @@ module ActiveFlag
       end
 
       # Reference to definition
-      define_singleton_method column.to_s.pluralize do
+      relation_method_name = column.to_s.pluralize
+      define_singleton_method relation_method_name do
         active_flags[column]
       end
 
       if respond_to?(:generated_relation_methods, true)
-        send(:generated_relation_methods).module_eval do
-          define_method column.to_s.pluralize do
-            klass.active_flags[column].with_scope(self)
+        unless relation_method_conflict?(relation_method_name)
+          send(:generated_relation_methods).module_eval do
+            define_method relation_method_name do
+              klass.active_flags[column].with_scope(self)
+            end
           end
         end
       end
@@ -70,6 +73,14 @@ module ActiveFlag
           "#{connection.quote_table_name(table_name)}.#{connection.quote_column_name(column)}"
         ]
       end
+    end
+
+  private
+
+    def relation_method_conflict?(method_name)
+      name = method_name.to_sym
+      ActiveRecord::Relation.method_defined?(name) ||
+        ActiveRecord::Relation.private_method_defined?(name)
     end
   end
 end
