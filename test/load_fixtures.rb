@@ -1,4 +1,4 @@
-I18n.load_path << File.join(File.dirname(__FILE__), 'files/locales.yml')
+I18n.load_path << File.join(__dir__, 'files/locales.yml')
 
 ActiveRecord::Base.send(:include, ActiveFlag)
 

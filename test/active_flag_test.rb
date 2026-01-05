@@ -46,13 +46,17 @@ class ActiveFlagTest < Minitest::Test
   def test_default_empty_array
     @profile.languages = []
 
-    assert_equal @profile.languages.raw, 0
-    assert @profile.languages, 0
+    assert_equal 0, @profile.languages.raw
   end
 
   def test_default_nil
-    assert_equal @profile.figures.raw, 0
-    assert @profile.figures, 0
+    assert_equal 0, @profile.figures.raw
+  end
+
+  def test_respond_to
+    assert @profile.languages.respond_to?(:english?)
+    assert @profile.languages.respond_to?(:spanish?)
+    refute @profile.languages.respond_to?(:nonexistent?)
   end
 
   def test_direct_string_assign

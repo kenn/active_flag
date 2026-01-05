@@ -5,7 +5,7 @@ module ActiveFlag
     def initialize(column, keys, klass)
       @column = column
       @keys = keys.freeze
-      @maps = Hash[keys.map.with_index{ |key, i| [key, 2**i] }].freeze
+      @maps = keys.map.with_index { |key, i| [key, 2**i] }.to_h.freeze
       @klass = klass
       @scope = klass
     end

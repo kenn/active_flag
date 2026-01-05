@@ -54,5 +54,10 @@ module ActiveFlag
         super
       end
     end
+
+    def respond_to_missing?(symbol, include_private = false)
+      key = symbol.to_s.chomp('?').to_sym
+      @definition.keys.include?(key) || super
+    end
   end
 end
