@@ -47,30 +47,30 @@ module ActiveFlag
 
       # Scopes
       define_singleton_method "where_#{column}" do |*args|
-        integer, column_name = send("_where_#{column}", *args)
-        where("#{column_name} & #{integer} > 0")
+        integer, attribute = send("_where_#{column}", *args)
+        where((attribute & integer).gt(0))
       end
 
       define_singleton_method "where_all_#{column}" do |*args|
-        integer, column_name = send("_where_#{column}", *args)
-        where("#{column_name} & #{integer} = #{integer}")
+        integer, attribute = send("_where_#{column}", *args)
+        where((attribute & integer).eq(integer))
       end
 
       define_singleton_method "where_not_#{column}" do |*args|
-        integer, column_name = send("_where_#{column}", *args)
-        where("#{column_name} & #{integer} = 0")
+        integer, attribute = send("_where_#{column}", *args)
+        where((attribute & integer).eq(0))
       end
 
       define_singleton_method "where_not_all_#{column}" do |*args|
-        integer, column_name = send("_where_#{column}", *args)
-        where("#{column_name} & #{integer} < #{integer}")
+        integer, attribute = send("_where_#{column}", *args)
+        where((attribute & integer).lt(integer))
       end
 
       # utility method to extract parameters
       define_singleton_method "_where_#{column}" do |*args|
         return [
           active_flags[column].to_i(args),
-          "#{connection.quote_table_name(table_name)}.#{connection.quote_column_name(column)}"
+          arel_table[column]
         ]
       end
     end

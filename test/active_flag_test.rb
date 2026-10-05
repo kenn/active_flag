@@ -162,4 +162,20 @@ class ActiveFlagTest < Minitest::Test
     assert_equal User.joins(:profile).where(profile: Profile.where_languages(:japanese)).count, 1
     assert_equal User.joins(:profile).where(profile: Profile.where_languages(:chinese)).count, 0
   end
+
+  def test_scope_without_permanent_connection_checkout
+    skip unless ActiveRecord.respond_to?(:permanent_connection_checkout)
+
+    previous = ActiveRecord.permanent_connection_checkout
+    ActiveRecord::Base.release_connection
+    ActiveRecord.permanent_connection_checkout = :disallowed
+
+    assert_equal 2, Profile.where_languages(:english).count
+    assert_equal 1, Profile.where_all_languages(:english, :japanese).count
+    assert_equal 1, Profile.where_not_languages(:english).count
+    assert_equal 2, Profile.where_not_all_languages(:english, :japanese).count
+    refute ActiveRecord::Base.connection_pool.active_connection?
+  ensure
+    ActiveRecord.permanent_connection_checkout = previous if previous
+  end
 end
